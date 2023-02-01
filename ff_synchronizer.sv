@@ -15,8 +15,8 @@ module ff_synchronizer#(parameter BITSIZE = 8)(
     //Always block for flip flops
     always_ff @ (posedge clk) begin
         if(reset) begin //Reset both flip flops to zero
-            midwires <= '0;
-            data_out <= '0;
+            midwires <= 0;
+            data_out <= 0;
         end else begin  //Set output data to what was between flops
             data_out <= midwires;
             midwires <= data_in;    

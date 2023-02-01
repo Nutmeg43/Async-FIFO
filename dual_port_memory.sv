@@ -1,10 +1,10 @@
-module dual_port_memory#(BITSIZE = 8, MEMSIZE = 32)(
+module dual_port_memory#(BITSIZE = 8, MEMSIZE = 32, ADDRESS_SIZE = 6)(
     input wclk,
     input rclk,
     input read,
     input write,
-    input [MEMSIZE-1:0] wadrs,
-    input [MEMSIZE-1:0] radrs,
+    input [ADDRESS_SIZE-1:0] wadrs,
+    input [ADDRESS_SIZE-1:0] radrs,
     input [BITSIZE-1:0] wdata,
     output logic [BITSIZE-1:0] rdata
 );
