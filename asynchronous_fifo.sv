@@ -84,22 +84,29 @@ module asynchronous_fifo#(
     
     //Block for writing data, and checking if full
     always @(posedge w_clk) begin
-        if(reset) begin     //Reset case, set write data location zero, not allowed to write any data
+        
+        //Check if resetting
+        if(reset) begin     
             wptr <= 0;
             full <= 0;
         end 
-        else if(write) begin //Case for reading data
-            if(wptr[POINTERLENGTH-2] == MEMSIZE-1) begin //If pointer is at memsize address limit
+        
+        //Check if full, if so can't write
+        if(wptr[POINTERLENGTH-1] != rptr_sync[POINTERLENGTH-1] && wptr[POINTERLENGTH-2:0] == rptr_sync[POINTERLENGTH-2:0]) begin
+            full <= 1;
+        end
+        else if(write) begin
+           if(wptr[POINTERLENGTH-2] == MEMSIZE-1) begin //If pointer is at memsize address limit
                 wptr[POINTERLENGTH-2:0] <= 0;  //Set lower bits to zero
                 wptr[POINTERLENGTH-1] <= ~wptr[POINTERLENGTH-1]; //Flip MSB
-            end
-            else if(wptr[POINTERLENGTH-1] != rptr[POINTERLENGTH-1] && wptr[POINTERLENGTH-2:0] == rptr[POINTERLENGTH-2:0]) begin //Check full case
-                full <= 1;
-            end
+            end 
             else begin
                 wptr <= wptr + 1;
                 full <= 0;
             end
+        end
+        else begin
+            full <= 0;
         end
     end
     
@@ -110,18 +117,22 @@ module asynchronous_fifo#(
             rptr <= 0;
             empty <= 1;
         end 
+        
+        if(rptr == wptr_sync) begin //Check empty case
+            empty <= 1; 
+        end
         else if(read) begin //Case for reading data
             if(rptr[POINTERLENGTH-2] == MEMSIZE-1) begin //If pointer is at memsize address limi
                 rptr[POINTERLENGTH-2:0] <= 0;  //Set lower bits to zero
                 rptr[POINTERLENGTH-1] <= ~rptr[POINTERLENGTH-1]; //Flip MSB
             end
-            else if(rptr == wptr_sync) begin //Check empty case
-                empty <= 1; 
-            end
             else begin
                 rptr <= rptr + 1;   
                 empty <= 0;  
             end
+        end
+        else begin
+            empty <= 0;
         end
     end
 

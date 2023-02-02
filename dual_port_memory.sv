@@ -19,7 +19,7 @@ module dual_port_memory#(BITSIZE = 8, MEMSIZE = 32, ADDRESS_SIZE = 6)(
     
     always @(posedge rclk) begin
         if(read) begin
-            rdata <= mem[rdata];
+            rdata <= mem[radrs];
         end
     end
     

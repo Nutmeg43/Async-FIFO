@@ -1,3 +1,7 @@
+`include "uvm.sv"
+import uvm_pkg::*;
+
+
 //A simple testbench, to be evolved in to a more complex UVM testbench
 module fifo_tb();
     localparam BITSIZE = 8;        //Length of data in memory
@@ -34,6 +38,7 @@ module fifo_tb();
     always #5 w_clk = ~w_clk;
     always #7 r_clk = ~r_clk;
     
+    
     initial begin
         w_clk = 0;
         r_clk = 0;
@@ -46,7 +51,13 @@ module fifo_tb();
         w_enable = 1;
         reset = 0;
         wdata = 8'hf8;
-        #1500
+        #350
+        w_enable = 0;
+        r_enable = 1;
+        #500
+        wdata = 8'h45;
+        w_enable = 1;
+        #500
         $stop();
     end
     
