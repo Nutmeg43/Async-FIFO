@@ -14,12 +14,14 @@ module dual_port_memory#(BITSIZE = 8, MEMSIZE = 32, ADDRESS_SIZE = 6)(
     always @(posedge wclk) begin
         if(write) begin
             mem[wadrs] <= wdata;
+            $display($sformatf("Just wrote data - 0x%0x, wadrs - 0x%0x",wdata, wadrs));
         end
     end
     
     always @(posedge rclk) begin
         if(read) begin
             rdata <= mem[radrs];
+            $display($sformatf("Just read data - 0x%0x, radrs - 0x%0x",mem[radrs],radrs));
         end
     end
     

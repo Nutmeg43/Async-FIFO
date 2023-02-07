@@ -6,12 +6,14 @@ class fifo_monitor extends uvm_monitor;
     endfunction
     
     virtual fifo_intf intf;
-    uvm_analysis_port #(fifo_seq) collect_port;
+    uvm_analysis_port #(fifo_seq) write_collect_port;
+    uvm_analysis_port #(fifo_seq) read_collect_port;
     
     //Build phase
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-        collect_port = new("collect_port",this);
+        read_collect_port = new("read_collect_port",this);
+        write_collect_port = new("write_collect_port",this);
         if(!uvm_config_db#(virtual fifo_intf)::get(this,"","fifo_intf",intf)) begin
             `uvm_fatal("MON","Could not get vif from db");
         end
@@ -33,7 +35,7 @@ class fifo_monitor extends uvm_monitor;
                     item.full = intf.full;
                     item.empty = intf.empty;
                     item.rdata = intf.rdata;
-                    collect_port.write_write_port(item);
+                    write_collect_port.write_write_port(item);
                 end
             end
             forever begin
@@ -46,7 +48,7 @@ class fifo_monitor extends uvm_monitor;
                     item.full = intf.full;
                     item.empty = intf.empty;
                     item.rdata = intf.rdata;
-                    collect_port.write_read_port(item);
+                    read_collect_port.write_read_port(item);
                 end
             end
         join

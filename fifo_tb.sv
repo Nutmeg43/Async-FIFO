@@ -2,7 +2,7 @@
 `include "fifo_test.sv"
 `include "fifo_intf.sv"
 import uvm_pkg::*;
-
+import fifo_pkg::*;
 
 //A simple testbench, to be evolved in to a more complex UVM testbench
 module fifo_tb();
@@ -35,13 +35,13 @@ module fifo_tb();
     ) asynchronous_fifo_instance(
         .w_clk(w_clk),
         .r_clk(r_clk),
-        .w_enable(w_enable),
-        .r_enable(r_enable),
-        .reset(reset),
-        .wdata(wdata),
-        .rdata(rdata),
-        .full(full),
-        .empty(empty)
+        .w_enable(fifo_intf_instance.w_enable),
+        .r_enable(fifo_intf_instance.r_enable),
+        .reset(fifo_intf_instance.reset),
+        .wdata(fifo_intf_instance.wdata),
+        .rdata(fifo_intf_instance.rdata),
+        .full(fifo_intf_instance.full),
+        .empty(fifo_intf_instance.empty)
     );
     
     always #5 w_clk = ~w_clk;
@@ -49,38 +49,13 @@ module fifo_tb();
     
     
     initial begin
+        $dumpfile("dump.vcd");
+        $dumpvars(0,fifo_tb); //Need tb to declare what to dump
         w_clk = 0;
         r_clk = 0;
-        uvm_config_db#(uvm_object_wrapper)::set(null,"*","BITSIZE",BITSIZE);
-        uvm_config_db#(uvm_object_wrapper)::set(null,"*","MEMSIZE",MEMSIZE);
-        uvm_config_db#(uvm_object_wrapper)::set(null,"*","POINTERLENGTH",POINTERLENGTH);
         uvm_config_db#(virtual fifo_intf)::set(null,"*","fifo_intf",fifo_intf_instance);
         run_test("fifo_test");
-        #100
         $stop();
     end
-    
-    
-//    initial begin
-//        w_clk = 0;
-//        r_clk = 0;
-//        reset = 0;
-//        r_enable = 0;
-//        w_enable = 0;
-//        wdata = '0;
-//        reset = 1;
-//        #20
-//        w_enable = 1;
-//        reset = 0;
-//        wdata = 8'hf8;
-//        #350
-//        w_enable = 0;
-//        r_enable = 1;
-//        #500
-//        wdata = 8'h45;
-//        w_enable = 1;
-//        #500
-//        $stop();
-//    end
     
 endmodule

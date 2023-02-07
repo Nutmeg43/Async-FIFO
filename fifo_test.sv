@@ -27,7 +27,7 @@ class fifo_test extends uvm_test;
     
     //Run phase
     virtual task run_phase(uvm_phase phase);
-      phase.phase_done.set_drain_time(this, 50); //50 time units after all transactions complete
+        phase.phase_done.set_drain_time(this, 50); //50 time units after all transactions complete
     endtask
     
     //Report the final restults
