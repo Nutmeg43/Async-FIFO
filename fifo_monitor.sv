@@ -35,7 +35,7 @@ class fifo_monitor extends uvm_monitor;
                     item.full = intf.full;
                     item.empty = intf.empty;
                     item.rdata = intf.rdata;
-                    write_collect_port.write_write_port(item);
+                    write_collect_port.write(item);
                 end
             end
             forever begin
@@ -48,7 +48,7 @@ class fifo_monitor extends uvm_monitor;
                     item.full = intf.full;
                     item.empty = intf.empty;
                     item.rdata = intf.rdata;
-                    read_collect_port.write_read_port(item);
+                    read_collect_port.write(item);
                 end
             end
         join

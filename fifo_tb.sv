@@ -4,7 +4,7 @@
 import uvm_pkg::*;
 import fifo_pkg::*;
 
-//A simple testbench, to be evolved in to a more complex UVM testbench
+//UVM testbench
 module fifo_tb();
     
     localparam BITSIZE = 8;        //Length of data in memory

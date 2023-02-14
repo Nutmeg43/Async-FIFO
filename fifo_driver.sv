@@ -27,19 +27,15 @@ class fifo_driver extends uvm_driver #(fifo_seq);
             //Fork for case where w_enable == 1 && r_enable == 1
             fork
                 @(posedge intf.w_clk) begin
-                    `uvm_info("DRV","waiting for w_clk",UVM_LOW);
                     intf.w_enable = item.w_enable;
                     intf.wdata = item.wdata;
                     intf.reset = item.reset;
                 end                    
                  @(posedge intf.r_clk) begin
-                    `uvm_info("DRV","waiting for r_clk",UVM_LOW);
                     intf.reset = item.reset;
                     intf.r_enable = item.r_enable;                       
                 end       
             join
-            
-            `uvm_info("DRV","Joined",UVM_LOW);
             
             seq_item_port.item_done();
         end

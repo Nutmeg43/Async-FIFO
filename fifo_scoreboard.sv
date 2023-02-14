@@ -6,6 +6,7 @@ class fifo_scoreboard extends uvm_scoreboard;
     uvm_analysis_imp_write_port#(fifo_seq,fifo_scoreboard) analysis_write_port;
     uvm_analysis_imp_read_port#(fifo_seq,fifo_scoreboard) analysis_read_port;
  
+ 
     logic [7:0]  sb_fifo_q[$];      //Queue that will be used for scoring items
     logic [7:0]  temp_fifo_item;    //Item that should be read
     logic [5:0]  sb_wptr;           //Pointer used for empty and full 
@@ -23,6 +24,11 @@ class fifo_scoreboard extends uvm_scoreboard;
         analysis_write_port = new("write_port",this);
         analysis_read_port = new("read_port",this);
     endfunction
+    
+    virtual function void write_wdomain(fifo_seq item);
+        
+    endfunction
+    
     
     //Write port, score 
     virtual function void write_write_port(fifo_seq item);
