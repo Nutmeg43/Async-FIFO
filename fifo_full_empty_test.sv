@@ -1,3 +1,11 @@
+/*
+ * Author: Jacob Salmon
+ * 
+ * Description: Base test extension for a test that fill fifo then empties it
+ * 
+ * Notable Info: Sets full first, then empties fifo
+ */
+ 
 class fifo_full_empty_test extends fifo_test;
     `uvm_component_utils(fifo_full_empty_test)
     

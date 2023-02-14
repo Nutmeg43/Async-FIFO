@@ -1,3 +1,12 @@
+/*
+ * Author: Jacob Salmon
+ * 
+ * Description: Multiple UVM Sequence class for different types of tests
+ * 
+ * Notable Info: fifo_sequence is a reset sequence, and since all otheres extends and call super()
+     * They will all have reset sequences at the start of their sequences
+ */
+ 
 class fifo_sequence extends uvm_sequence #(fifo_seq);
     `uvm_object_utils(fifo_sequence)
  

@@ -1,3 +1,11 @@
+/*
+ * Author: Jacob Salmon
+ * 
+ * Description: UVM Agent component
+ * 
+ * Notable Info: For connecting sequencer/driver and creating monitor/sequencer/driver
+ */
+
 class fifo_agent extends uvm_agent;
     `uvm_component_utils(fifo_agent)
  

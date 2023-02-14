@@ -1,3 +1,13 @@
+/*
+ * Author: Jacob Salmon
+ * 
+ * Description: Extention of base test (fifo_test.sv)
+ * 
+ * Notable Info: Due to simulation tool constraints, this test is meant to test all cases for 
+ * hitting all unique coverpoints. It uses the all_seq sequencer 
+ */
+ 
+ 
 class fifo_complete_test extends fifo_test;
     `uvm_component_utils(fifo_complete_test)
     

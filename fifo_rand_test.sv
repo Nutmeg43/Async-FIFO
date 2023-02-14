@@ -1,3 +1,11 @@
+/*
+ * Author: Jacob Salmon
+ * 
+ * Description: Base test extension for sending random values
+ * 
+ * Notable Info: Random, but reset will not be set
+ */
+ 
 class fifo_rand_test extends fifo_test;
     `uvm_component_utils(fifo_rand_test)
     

@@ -1,3 +1,11 @@
+/*
+ * Author: Jacob Salmon
+ * 
+ * Description: UVM Monitor for monitoring the intf between test/DUT
+ * 
+ * Notable Info: Monitors and both clocks, and sends to sb port according to domain
+ */
+ 
 class fifo_monitor extends uvm_monitor;
     `uvm_component_utils(fifo_monitor)
  

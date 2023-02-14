@@ -1,3 +1,11 @@
+/*
+ * Author: Jacob Salmon
+ * 
+ * Description: Interface between test components and DUT
+ * 
+ * Notable Info: Dual clocking blocks for driving/moitioring both domains
+ */
+ 
 interface fifo_intf#(
     BITSIZE = 8
 )(

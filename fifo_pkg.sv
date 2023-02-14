@@ -1,3 +1,11 @@
+/*
+ * Author: Jacob Salmon
+ * 
+ * Description: Package for all classes needed to run
+ * 
+ * Notable Info: Includes uvm.sv, but comercial simulators might precompile this
+ */
+ 
 package fifo_pkg;
     `include "uvm.sv"
     import uvm_pkg::*;

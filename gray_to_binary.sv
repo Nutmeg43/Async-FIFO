@@ -1,5 +1,9 @@
 /*
- * Implementation of a gray to binary decoder (decodes gray)
+ * Author: Jacob Salmon
+ * 
+ * Description: Implementation of a gray to binary decoder (decodes gray)
+ * 
+ * Notable Info: Input gray, output binary
  */
  
 module gray_to_binary#(parameter BITSIZE = 8)(

@@ -1,5 +1,9 @@
 /*
- * Implementation of a binary to grey encoder (encodes binary)
+ * Author: Jacob Salmon
+ * 
+ * Description: Implementation of a binary to grey encoder (encodes binary)
+ * 
+ * Notable Info: Input binary, ouputs gray
  */
 
 module binary_to_gray#(parameter BITSIZE = 8)(

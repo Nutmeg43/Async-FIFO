@@ -1,3 +1,11 @@
+/*
+ * Author: Jacob Salmon
+ * 
+ * Description: UVM Driver for sending transactions to DUT
+ * 
+ * Notable Info: Drives at both w_clk and r_clk
+ */
+ 
 class fifo_driver extends uvm_driver #(fifo_seq);
     `uvm_component_utils(fifo_driver)
  

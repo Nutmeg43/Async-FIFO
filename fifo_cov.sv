@@ -1,3 +1,11 @@
+/*
+ * Author: Jacob Salmon
+ * 
+ * Description: Coverage class
+ * 
+ * Notable Info: Coverage is sampled in scoreboard
+ */
+ 
 class fifo_cov;
                               
     logic w_enable;                               //Enable signal for writing data

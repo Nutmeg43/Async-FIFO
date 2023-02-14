@@ -1,3 +1,11 @@
+/*
+ * Author: Jacob Salmon
+ * 
+ * Description: An RTL model of an asynchronous fifo, for transfering data between multiple clock domains.
+ * 
+ * Notable Info: Singular reset for both domains, two enables (one for each domain)
+ */
+
 module asynchronous_fifo#(
     BITSIZE = 8,        //Length of data in memory
     MEMSIZE = 32,       //Number of locations in memory

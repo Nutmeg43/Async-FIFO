@@ -1,10 +1,19 @@
+/*
+ * Author: Jacob Salmon
+ * 
+ * Description: Testbench module (top level) that will call run_test and start tests.
+ * Holds instances of the interface and DUT
+ * Connects DUT inputs/outputs to the interface 
+ * 
+ * Notable Info: Parameters describing the DUT can be adjusted here (should adjust sequences accordingly if done)
+ */
+
 `include "uvm.sv"
 `include "fifo_test.sv"
 `include "fifo_intf.sv"
 import uvm_pkg::*;
 import fifo_pkg::*;
 
-//UVM testbench
 module fifo_tb();
     
     localparam BITSIZE = 8;        //Length of data in memory

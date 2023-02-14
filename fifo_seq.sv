@@ -1,3 +1,11 @@
+/*
+ * Author: Jacob Salmon
+ * 
+ * Description: UVM Sequence item or transaction for what data will be sent to DUT
+ * 
+ * Notable Info: uvm fiels allows use of print() function if needed
+ */
+ 
 class fifo_seq extends uvm_sequence_item;   
     `uvm_object_utils_begin(fifo_seq)
         `uvm_field_int(w_enable,UVM_ALL_ON)

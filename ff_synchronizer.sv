@@ -1,8 +1,11 @@
 /*
- * Two stage flip flop synchronizer
- * Used when trying to avoid metastability across clock domains
- * Uses synchronous reset
+ * Author: Jacob Salmon
+ * 
+ * Description: Two stage flip flop synchronizer, used when trying to avoid metastability across clock domains
+ * 
+ * Notable Info: Reset will reset both flops (not just first or second)
  */
+ 
 module ff_synchronizer#(parameter BITSIZE = 8)(
     input                      reset,          //Synchronous reset signal for both flops
     input                      clk,            //Clock driving flops

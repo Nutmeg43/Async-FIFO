@@ -1,3 +1,11 @@
+/*
+ * Author: Jacob Salmon
+ * 
+ * Description: Dual port memory, with two clocks for async read/write
+ * 
+ * Notable Info: Two enables, one reset signal for both domains
+ */
+ 
 module dual_port_memory#(BITSIZE = 8, MEMSIZE = 32, ADDRESS_SIZE = 6)(
     input wclk,
     input rclk,

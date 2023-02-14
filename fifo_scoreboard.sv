@@ -1,3 +1,13 @@
+/*
+ * Author: Jacob Salmon
+ * 
+ * Description: UVM Scoreboard for scoring/checking data was correct
+ * Holds a queue that tracks the items that have been inserted into the fifo
+ * Also has second queue to represent the ff synchronizer for crossing domains
+ * 
+ * Notable Info: Coverage is contained here, and has two write ports
+ */
+ 
 class fifo_scoreboard extends uvm_scoreboard;
     `uvm_component_utils(fifo_scoreboard)
  
