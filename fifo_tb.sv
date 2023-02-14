@@ -54,7 +54,9 @@ module fifo_tb();
         w_clk = 0;
         r_clk = 0;
         uvm_config_db#(virtual fifo_intf)::set(null,"*","fifo_intf",fifo_intf_instance);
-        run_test("fifo_test");
+        //run_test("fifo_full_empty_test");
+        //run_test("fifo_rand_test");
+        run_test("fifo_complete_test");
         $stop();
     end
     

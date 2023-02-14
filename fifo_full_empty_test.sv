@@ -1,5 +1,5 @@
-class fifo_test extends uvm_test;
-    `uvm_component_utils(fifo_test)
+class fifo_full_empty_test extends fifo_test;
+    `uvm_component_utils(fifo_full_empty_test)
     
     
     function new(string name,uvm_component parent);
@@ -12,18 +12,19 @@ class fifo_test extends uvm_test;
     //Build environemnt and sequence
     virtual function void build_phase(uvm_phase phase);
         super.build_phase(phase);
-        env = fifo_env::type_id::create("env",this);
-        seq = fifo_sequence::type_id::create("seq");
+        uvm_config_db#(uvm_object_wrapper)::set(this,"env.agent.sequencer.run_phase", 
+            "default_sequence",write_full_empty_seq::type_id::get()
+        );
     endfunction
     
     //Print the topology of design
     virtual function void end_of_elaboration_phase(uvm_phase phase);
-        uvm_top.print_topology();
+        super.end_of_elaboration_phase(phase);
     endfunction
     
     //Run phase
     virtual task run_phase(uvm_phase phase);
-        phase.phase_done.set_drain_time(this, 50); //50 time units after all transactions complete
+        super.run_phase(phase);
     endtask
 
 endclass

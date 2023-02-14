@@ -14,6 +14,9 @@ class fifo_scoreboard extends uvm_scoreboard;
     logic [5:0]  r_delay_q[$:2];    //Queue that will act as two stage flip flop
     logic        full;              //When set it is expected that the fifo is full
     logic        empty;             //When set it is expected that the fifo is empty
+    logic        empty_flop;        //Flops empty (due to empty being comb logic)
+    logic        full_flop;          //Flops full  (due to full being comb logic)
+    
  
     function new(string name,uvm_component parent);
         super.new(name,parent);
@@ -23,7 +26,7 @@ class fifo_scoreboard extends uvm_scoreboard;
     
     //Write port, score 
     virtual function void write_write_port(fifo_seq item);
-                        
+    
         //Check reset
         if(item.reset) begin
             if(item.full) begin
@@ -37,7 +40,7 @@ class fifo_scoreboard extends uvm_scoreboard;
         end
         
         //Check if we should be full
-        if((r_delay_q[0][4:0] == sb_wptr[4:0]) && (r_delay_q[0][5] != sb_wptr[5])) begin
+        if((r_delay_q[0][4:0] == sb_wptr[4:0]) && (r_delay_q[0][5] != sb_wptr[5]) && full_flop == 1) begin
             if(item.full == 0) begin
                 `uvm_error("ERROR",$sformatf("Queue should be full but is not: r_delay_q = %b, sb_wptr = %b",r_delay_q[0],sb_wptr));
             end
@@ -48,17 +51,17 @@ class fifo_scoreboard extends uvm_scoreboard;
             sb_fifo_q.push_back(item.wdata);
             `uvm_info("SB_INFO",$sformatf("Last value of w_delay_q = 0x%0x, sb_wptr = 0x%0x, wdata=0x%0x",
                 w_delay_q[0], sb_wptr, item.wdata
-            ),UVM_LOW);
+            ),UVM_HIGH);
             sb_wptr = sb_wptr + 1;  
         end
         
         w_delay_q.pop_front();
-        w_delay_q.push_back(sb_wptr);
-        
+        w_delay_q.push_back(sb_wptr);   
+        full_flop = item.full;
     endfunction
     
     //Read port, score 
-    virtual function void write_read_port(fifo_seq item);
+    virtual function void write_read_port(fifo_seq item);     
                         
         //Check reset
         if(item.reset) begin
@@ -80,17 +83,18 @@ class fifo_scoreboard extends uvm_scoreboard;
         end
             
         //Check case where actively reading
-        if(item.r_enable & ~item.empty & ~item.reset) begin
+        if(item.r_enable & ~empty_flop & ~item.reset) begin
             temp_fifo_item = sb_fifo_q.pop_front();
             if(temp_fifo_item != item.rdata) begin
                 `uvm_error("ERROR",$sformatf("Read data = 0x%0x, expected read data = 0x%0x",item.rdata,temp_fifo_item));
             end
-            `uvm_info("SB_INFO",$sformatf("Last value of r_delay_q = 0x%0x, sb_rptr = 0x%0x",r_delay_q[0], sb_rptr),UVM_LOW);
+            `uvm_info("SB_INFO",$sformatf("Last value of r_delay_q = 0x%0x, sb_rptr = 0x%0x",r_delay_q[0], sb_rptr),UVM_HIGH);
             sb_rptr = sb_rptr + 1;
         end
         
         r_delay_q.pop_front();
         r_delay_q.push_back(sb_rptr);
+        empty_flop = item.empty;
     endfunction
     
     

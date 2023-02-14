@@ -71,24 +71,21 @@ module asynchronous_fifo#(
     dual_port_memory #(.BITSIZE(BITSIZE),.MEMSIZE(MEMSIZE),.ADDRESS_SIZE(POINTERLENGTH - 1)) dual_port_memory_instance(
         .wclk(w_clk),
         .rclk(r_clk),
-        .read(read),
-        .write(write),
+        .r_en(r_enable),
+        .w_en(w_enable),
+        .empty(empty),
+        .full(full),
+        .reset(reset),
         .wadrs(wptr[POINTERLENGTH-2:0]),
         .radrs(rptr[POINTERLENGTH-2:0]),
         .wdata(wdata),
         .rdata(rdata)
     );
     
-    
-    //Assignments for write and read
-    assign write = (~reset & ~full & w_enable);
-    assign read = (~reset & ~empty & r_enable);
-    assign check_full = wptr + 1;
-    assign check_empty = rptr + 1;
-    
-    
     //Block for writing data, and checking if full
-    always_ff @(posedge w_clk) begin
+    always @(posedge w_clk) begin
+        
+        //$display($sformatf("ASYNC: empty - 0x%0x, reset - 0x%0x, w_en = 0x%0x, write = 0x%0x",empty,reset,w_enable));
         
         //Check if resetting
         if(reset) begin     
@@ -100,17 +97,21 @@ module asynchronous_fifo#(
         if(wptr[POINTERLENGTH-1] != rptr_sync[POINTERLENGTH-1] && wptr[POINTERLENGTH-2:0] == rptr_sync[POINTERLENGTH-2:0]) begin
             full <= 1;
         end
-        else if(write) begin
+        else if(~reset & ~full & w_enable) begin
             if(wptr[POINTERLENGTH-2] == MEMSIZE-1) begin //If pointer is at memsize address limit
                 wptr[POINTERLENGTH-2:0] <= 0;  //Set lower bits to zero
                 wptr[POINTERLENGTH-1] <= ~wptr[POINTERLENGTH-1]; //Flip MSB
             end 
             else begin
-                $display("WRITE");
+                //$display("WRITE");
                 wptr <= wptr + 1;
-                if(check_next[POINTERLENGTH-1] != rptr_sync[POINTERLENGTH-1] && check_next[POINTERLENGTH-2:0] == rptr_sync[POINTERLENGTH-2:0]) begin
+                if(wptr[POINTERLENGTH-1] != rptr_sync[POINTERLENGTH-1] && wptr[POINTERLENGTH-2:0] == rptr_sync[POINTERLENGTH-2:0]) begin //Currently full
                     full <= 1;
-                end else begin
+                end 
+                else if(wptr - 31 == rptr_sync) begin   //Full next cycle
+                    full <= 1;
+                end    
+                else begin  //Not full
                     full <= 0;
                 end
             end
@@ -121,19 +122,19 @@ module asynchronous_fifo#(
     end
     
     //Block for reading data, and checking if empty
-    always_ff @(posedge r_clk) begin
+    always @(posedge r_clk) begin
         if(reset) begin //Reset case, set read pointer to location zero, not allowed to read any data
             rptr <= 0;
             empty <= 1;
         end 
-        else if(read) begin //Case for reading data
+        else if(~reset & ~empty & r_enable) begin //Case for reading data
             if(rptr[POINTERLENGTH-2] == MEMSIZE-1) begin //If pointer is at memsize address limi
                 rptr[POINTERLENGTH-2:0] <= 0;  //Set lower bits to zero
                 rptr[POINTERLENGTH-1] <= ~rptr[POINTERLENGTH-1]; //Flip MSB
             end
             else begin
                 rptr <= rptr + 1;  
-                if(check_empty == wptr_sync) begin //Check empty case
+                if(rptr == wptr_sync) begin //Check empty case
                     empty <= 1; 
                 end else begin
                     empty <= 0;
@@ -141,9 +142,13 @@ module asynchronous_fifo#(
             end
         end
         else begin
-            if(rptr == wptr_sync) begin //Check empty case
+            if(rptr == wptr_sync) begin //Check empty currently
                 empty <= 1; 
-            end else begin
+            end 
+            else if(wptr_sync - rptr == 1) begin //Check going to be empty
+                empty <= 1;
+            end
+            else begin
                 empty <= 0;
             end
         end

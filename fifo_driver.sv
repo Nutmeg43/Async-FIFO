@@ -22,7 +22,7 @@ class fifo_driver extends uvm_driver #(fifo_seq);
         super.run_phase(phase);
         forever begin
             seq_item_port.get_next_item(item);
-            item.print();
+            //item.print();
             
             //Fork for case where w_enable == 1 && r_enable == 1
             fork
