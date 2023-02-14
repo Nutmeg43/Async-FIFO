@@ -15,18 +15,27 @@ class fifo_scoreboard extends uvm_scoreboard;
     logic [5:0]  r_delay_q[$:2];    //Queue that will act as two stage flip flop
     logic        full;              //When set it is expected that the fifo is full
     logic        empty;             //When set it is expected that the fifo is empty
+    logic        reset;             //Resets design        
+    logic        w_enable;          //Enable signal for writing data
+    logic        r_enable;          //Enable signal for reading data
     logic        empty_flop;        //Flops empty (due to empty being comb logic)
     logic        full_flop;          //Flops full  (due to full being comb logic)
-    
+    fifo_cov cov = new();
  
     function new(string name,uvm_component parent);
         super.new(name,parent);
         analysis_write_port = new("write_port",this);
         analysis_read_port = new("read_port",this);
+    endfunction    
+    
+    //Start of sim, set coverage to start
+    function void start_of_simulation_phase(uvm_phase phase);
+        cov.fifo_group.start();     
     endfunction
     
-    virtual function void write_wdomain(fifo_seq item);
-        
+    function void report_phase(uvm_phase phase);
+        cov.fifo_group.stop();
+        `uvm_info("COV",$sformatf("Coverage results: %f functional coverage",cov.fifo_group.get_coverage()),UVM_LOW);
     endfunction
     
     
@@ -64,6 +73,11 @@ class fifo_scoreboard extends uvm_scoreboard;
         w_delay_q.pop_front();
         w_delay_q.push_back(sb_wptr);   
         full_flop = item.full;
+        w_enable = item.w_enable;
+        reset = item.reset;
+        full = item.full;
+        set_cov();
+        cov.fifo_group.sample();
     endfunction
     
     //Read port, score 
@@ -101,7 +115,21 @@ class fifo_scoreboard extends uvm_scoreboard;
         r_delay_q.pop_front();
         r_delay_q.push_back(sb_rptr);
         empty_flop = item.empty;
+        r_enable = item.r_enable;
+        reset = item.reset;
+        empty = item.empty;
+        set_cov();
+        cov.fifo_group.sample();
     endfunction
+    
+    //Task for setting coverage values
+    virtual task set_cov();
+        cov.empty = empty;
+        cov.full = full;
+        cov.r_enable = r_enable;
+        cov.w_enable = w_enable;
+        cov.reset = reset;
+    endtask
     
     
 endclass

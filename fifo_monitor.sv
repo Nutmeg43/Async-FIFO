@@ -53,6 +53,6 @@ class fifo_monitor extends uvm_monitor;
             end
         join
     endtask        
-    
+        
 endclass
  

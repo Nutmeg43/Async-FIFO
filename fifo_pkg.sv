@@ -1,6 +1,7 @@
 package fifo_pkg;
     `include "uvm.sv"
     import uvm_pkg::*;
+    `include "fifo_cov.sv"
     `include "fifo_seq.sv"
     `include "fifo_sequence.sv"
     `include "fifo_scoreboard.sv"
