@@ -34,12 +34,12 @@ class fifo_driver extends uvm_driver #(fifo_seq);
             
             //Fork for case where w_enable == 1 && r_enable == 1
             fork
-                @(posedge intf.w_clk) begin
+                @(intf.w_cb) begin
                     intf.w_enable = item.w_enable;
                     intf.wdata = item.wdata;
                     intf.reset = item.reset;
                 end                    
-                 @(posedge intf.r_clk) begin
+                 @(intf.r_cb) begin
                     intf.reset = item.reset;
                     intf.r_enable = item.r_enable;                       
                 end       

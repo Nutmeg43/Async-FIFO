@@ -34,7 +34,7 @@ class fifo_monitor extends uvm_monitor;
         //Fork to monitor both clocking blocks at the same times
         fork
             forever begin
-                @(posedge intf.w_clk) begin
+                @(intf.w_cb) begin
                     fifo_seq item = fifo_seq::type_id::create("item");
                     item.w_enable = intf.w_enable;
                     item.wdata = intf.wdata;
@@ -47,7 +47,7 @@ class fifo_monitor extends uvm_monitor;
                 end
             end
             forever begin
-                @(posedge intf.r_clk) begin
+                @(intf.r_cb) begin
                     fifo_seq item = fifo_seq::type_id::create("item");
                     item.w_enable = intf.w_enable;
                     item.wdata = intf.wdata;
